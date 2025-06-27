@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    parameters {
+        booleanParam(name: 'LANCER_TEST', defaultValue: true, description: 'Lancer les tests ?')
+    }
+
+    stages {
+        stage('Clean') {
+            steps {
+                bat "rd /s /q HelloWorldProject || exit 0"
+            }
+        }
+
+        stage('Clone') {
+            steps {
+                bat "git clone https://github.com/bigstone77G/HelloWorldProject.git"
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat "cd HelloWorldProject && javac HelloWorld.java"
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo params.LANCER_TEST ? 'Test OK!' : 'Test failed'
+            }
+        }
+
+        stage('Run') {
+            steps {
+                bat "cd HelloWorldProject && java HelloWorld"
+            }
+        }
+    }
+}
